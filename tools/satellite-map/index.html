@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>全球卫星影像</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <a class="home-link" href="../../" title="返回个人主页">← 主页</a>
+  <div id="map"></div>
+
+  <!-- 左上容器 -->
+  <div class="left-panels">
+    <!-- 区域快捷跳转 -->
+    <div class="control-panel" id="regionPanel">
+      <div class="panel-title">快捷定位</div>
+      <button data-lat="34.35" data-lng="108.64" data-zoom="4">亚洲 / 中国</button>
+      <button data-lat="54.53" data-lng="15.26" data-zoom="4">欧洲</button>
+      <button data-lat="37.09" data-lng="-95.71" data-zoom="4">北美洲</button>
+      <button data-lat="-14.24" data-lng="-51.93" data-zoom="4">南美洲</button>
+      <button data-lat="-8.78" data-lng="34.51" data-zoom="4">非洲</button>
+      <button data-lat="-25.27" data-lng="133.78" data-zoom="4">澳大利亚</button>
+      <button data-lat="20" data-lng="0" data-zoom="2" class="world-btn">全球视图</button>
+    </div>
+
+    <!-- 实测站点加载 -->
+    <div class="control-panel" id="insituPanel">
+      <div class="panel-title">实测站点</div>
+      <button id="loadInsituBtn">加载实测站点数据</button>
+      <div class="insitu-status" id="insituStatus" style="display:none;"></div>
+    </div>
+
+    <!-- SHP 图层管理 -->
+    <div class="shp-panel" id="shpPanel">
+    <div class="panel-title">SHP 图层管理</div>
+    <div class="shp-upload-row">
+      <input type="file" id="shpFileInput" accept=".zip,.shp" multiple hidden />
+      <button id="shpUploadBtn" class="shp-upload-btn">+ 上传 .zip / .shp</button>
+    </div>
+    <div class="shp-layer-list" id="shpLayerList">
+      <div class="shp-empty">暂无上传图层</div>
+    </div>
+    <div class="shp-loading" id="shpLoading" style="display:none;">解析中...</div>
+  </div>
+  </div>
+
+  <!-- 右上：经纬度定位 -->
+  <div class="coord-panel" id="coordPanel">
+    <div class="panel-title">经纬度定位</div>
+    <div class="coord-row">
+      <input type="number" id="latInput" placeholder="纬度 (-90~90)" step="any" min="-90" max="90" />
+      <input type="number" id="lngInput" placeholder="经度 (-180~180)" step="any" min="-180" max="180" />
+      <input type="number" id="zoomInput" placeholder="缩放" value="12" min="2" max="18" step="1" />
+      <button id="coordGoBtn">定位</button>
+    </div>
+  </div>
+
+  <!-- 右下：图层切换器 -->
+  <div class="layer-switcher" id="layerSwitcher">
+    <div class="panel-title">底图切换</div>
+    <div class="layer-option active" data-layer="esri">
+      <span class="layer-dot" style="background:#2d6ca2;"></span> ESRI 卫星图
+    </div>
+    <div class="layer-option" data-layer="osm">
+      <span class="layer-dot" style="background:#7cbd6b;"></span> OpenStreetMap
+    </div>
+    <div class="layer-option" data-layer="topo">
+      <span class="layer-dot" style="background:#c77b3a;"></span> 地形图
+    </div>
+    <div class="layer-option" data-layer="carto">
+      <span class="layer-dot" style="background:#555;"></span> CartoDB 极简
+    </div>
+  </div>
+
+  <!-- 左下：鼠标坐标 -->
+  <div class="coord-display">
+    经度: <span id="lngDisplay">--</span> &nbsp; 纬度: <span id="latDisplay">--</span> &nbsp; 缩放: <span id="zoomDisplay">2</span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/shpjs@6.2.0/dist/shp.js"></script>
+  <script src="stations_data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

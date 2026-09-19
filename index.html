@@ -1,86 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>全球卫星影像</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Kellen 的学术主页：研究方向、教学经历、发表作品与科研工具。"><meta name="theme-color" content="#0b1830">
+  <title>Kellen · Academic Homepage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2216%22 fill=%22%230b1830%22/><path d=%22M18 13h8v17l15-17h10L34 32l18 19H41L26 34v17h-8z%22 fill=%22%23f5c451%22/></svg>">
 </head>
 <body>
-  <div id="map"></div>
-
-  <!-- 左上容器 -->
-  <div class="left-panels">
-    <!-- 区域快捷跳转 -->
-    <div class="control-panel" id="regionPanel">
-      <div class="panel-title">快捷定位</div>
-      <button data-lat="34.35" data-lng="108.64" data-zoom="4">亚洲 / 中国</button>
-      <button data-lat="54.53" data-lng="15.26" data-zoom="4">欧洲</button>
-      <button data-lat="37.09" data-lng="-95.71" data-zoom="4">北美洲</button>
-      <button data-lat="-14.24" data-lng="-51.93" data-zoom="4">南美洲</button>
-      <button data-lat="-8.78" data-lng="34.51" data-zoom="4">非洲</button>
-      <button data-lat="-25.27" data-lng="133.78" data-zoom="4">澳大利亚</button>
-      <button data-lat="20" data-lng="0" data-zoom="2" class="world-btn">全球视图</button>
-    </div>
-
-    <!-- 实测站点加载 -->
-    <div class="control-panel" id="insituPanel">
-      <div class="panel-title">实测站点</div>
-      <button id="loadInsituBtn">加载实测站点数据</button>
-      <div class="insitu-status" id="insituStatus" style="display:none;"></div>
-    </div>
-
-    <!-- SHP 图层管理 -->
-    <div class="shp-panel" id="shpPanel">
-    <div class="panel-title">SHP 图层管理</div>
-    <div class="shp-upload-row">
-      <input type="file" id="shpFileInput" accept=".zip,.shp" multiple hidden />
-      <button id="shpUploadBtn" class="shp-upload-btn">+ 上传 .zip / .shp</button>
-    </div>
-    <div class="shp-layer-list" id="shpLayerList">
-      <div class="shp-empty">暂无上传图层</div>
-    </div>
-    <div class="shp-loading" id="shpLoading" style="display:none;">解析中...</div>
-  </div>
-  </div>
-
-  <!-- 右上：经纬度定位 -->
-  <div class="coord-panel" id="coordPanel">
-    <div class="panel-title">经纬度定位</div>
-    <div class="coord-row">
-      <input type="number" id="latInput" placeholder="纬度 (-90~90)" step="any" min="-90" max="90" />
-      <input type="number" id="lngInput" placeholder="经度 (-180~180)" step="any" min="-180" max="180" />
-      <input type="number" id="zoomInput" placeholder="缩放" value="12" min="2" max="18" step="1" />
-      <button id="coordGoBtn">定位</button>
-    </div>
-  </div>
-
-  <!-- 右下：图层切换器 -->
-  <div class="layer-switcher" id="layerSwitcher">
-    <div class="panel-title">底图切换</div>
-    <div class="layer-option active" data-layer="esri">
-      <span class="layer-dot" style="background:#2d6ca2;"></span> ESRI 卫星图
-    </div>
-    <div class="layer-option" data-layer="osm">
-      <span class="layer-dot" style="background:#7cbd6b;"></span> OpenStreetMap
-    </div>
-    <div class="layer-option" data-layer="topo">
-      <span class="layer-dot" style="background:#c77b3a;"></span> 地形图
-    </div>
-    <div class="layer-option" data-layer="carto">
-      <span class="layer-dot" style="background:#555;"></span> CartoDB 极简
-    </div>
-  </div>
-
-  <!-- 左下：鼠标坐标 -->
-  <div class="coord-display">
-    经度: <span id="lngDisplay">--</span> &nbsp; 纬度: <span id="latDisplay">--</span> &nbsp; 缩放: <span id="zoomDisplay">2</span>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/shpjs@6.2.0/dist/shp.js"></script>
-  <script src="stations_data.js"></script>
-  <script src="script.js"></script>
+  <a class="skip-link" href="#main">跳到主要内容</a><div class="page-grid" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="#top"><span class="brand-mark">K</span><span>Kellen</span></a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">菜单</button>
+    <nav id="site-nav" class="site-nav"><a href="#about">关于</a><a href="#research">研究</a><a href="#experience">经历</a><a href="#works">成果</a><a href="#projects">项目</a></nav>
+  </header>
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> Academic portfolio · 2026</p>
+        <h1>探索地球数据，<br><em>构建可用的知识。</em></h1>
+        <p class="hero-intro">我是 Kellen，中国科学院大学博士研究生。我的工作聚焦于遥感、地理空间数据分析与科学计算，并尝试把研究过程沉淀为清晰、开放、可复用的工具。</p>
+        <div class="hero-actions"><a class="button button-primary" href="#projects">查看项目 <span>↘</span></a><a class="button button-quiet" href="mailto:07212709@cumt.edu.cn">邮件联系</a></div>
+      </div>
+      <aside class="profile-card" aria-label="个人资料">
+        <div class="portrait-wrap"><img src="https://avatars.githubusercontent.com/u/166420522?v=4" alt="Kellen 的头像" width="320" height="320"><span class="status-dot"></span></div>
+        <div class="profile-head"><div><p class="profile-name">Kellen</p><p class="profile-role">UCAS · PhD Candidate</p></div><span class="profile-index">01</span></div>
+        <dl class="profile-meta"><div><dt>研究领域</dt><dd>Remote Sensing</dd></div><div><dt>所在地</dt><dd>China</dd></div><div><dt>邮箱</dt><dd><a href="mailto:07212709@cumt.edu.cn">07212709@cumt.edu.cn</a></dd></div></dl>
+        <div class="profile-links"><a href="https://github.com/Kellen-Workspace" target="_blank" rel="noreferrer">GitHub ↗</a><span>Google Scholar · 待补充</span><span>ORCID · 待补充</span></div>
+      </aside>
+    </section>
+    <section class="statement section-shell" id="about">
+      <p class="section-label">01 / 关于我</p><div class="statement-content"><h2>从科学问题出发，连接观测、数据与方法。</h2><div class="statement-text"><p>我关注如何从多源地球观测数据中提取可靠信息，并以可解释、可复现的方式服务于环境与地表过程研究。</p><p class="muted">这里是个人介绍的初稿位置。后续可替换为你的完整教育背景、当前课题和长期研究目标。</p></div></div>
+    </section>
+    <section class="section-shell" id="research">
+      <div class="section-heading"><div><p class="section-label">02 / 研究兴趣</p><h2>Research interests</h2></div><p>围绕地球观测与数据密集型科学展开的研究主题。</p></div>
+      <div class="interest-grid">
+        <article class="interest-card"><span>01</span><h3>遥感与地球观测</h3><p>卫星数据处理、地表参数反演与多源遥感信息融合。</p></article>
+        <article class="interest-card"><span>02</span><h3>地理空间数据分析</h3><p>空间数据组织、可视化、尺度效应与时空模式发现。</p></article>
+        <article class="interest-card"><span>03</span><h3>科学计算</h3><p>可复现分析流程、研究软件与面向科研问题的轻量工具。</p></article>
+        <article class="interest-card accent-card"><span>04</span><h3>开放研究</h3><p>让数据、方法与结果更易理解，也更方便被验证与复用。</p></article>
+      </div>
+    </section>
+    <section class="section-shell split-section" id="experience">
+      <div class="split-title"><p class="section-label">03 / 教学与经历</p><h2>Teaching &amp;<br>Experience</h2></div>
+      <div class="timeline">
+        <article class="timeline-item current"><div class="timeline-date">Current</div><div><h3>博士研究生</h3><p>中国科学院大学 · 具体培养单位与研究课题待补充</p></div></article>
+        <article class="timeline-item placeholder-item"><div class="timeline-date">Teaching</div><div><h3>教学经历</h3><p>可在此添加课程助教、授课、学生指导或学术分享经历。</p></div></article>
+        <article class="timeline-item placeholder-item"><div class="timeline-date">Education</div><div><h3>教育背景</h3><p>可在此补充本科、硕士阶段的学校、专业及时间。</p></div></article>
+      </div>
+    </section>
+    <section class="section-shell" id="works">
+      <div class="section-heading"><div><p class="section-label">04 / 学术成果</p><h2>Selected works</h2></div><p>论文、数据集与学术荣誉可按年份持续更新。</p></div>
+      <div class="works-grid">
+        <article class="works-panel"><div class="panel-top"><h3>Publications</h3><span>论文</span></div><div class="empty-state"><p>发表作品列表待补充</p><span>提供论文题目、作者、期刊、年份和 DOI 后即可生成标准条目。</span></div></article>
+        <article class="works-panel"><div class="panel-top"><h3>Honors</h3><span>荣誉</span></div><div class="empty-state"><p>个人荣誉列表待补充</p><span>可展示奖学金、竞赛获奖、学术奖励与专业认证。</span></div></article>
+      </div>
+    </section>
+    <section class="projects-section" id="projects"><div class="section-shell">
+      <div class="projects-heading"><div><p class="section-label light">05 / 功能区</p><h2>Projects, tools<br>&amp; field notes.</h2></div><p>这里是主页的工作台：研究工具、笔记与实验性项目都会从这里继续生长。</p></div>
+      <div class="project-grid">
+        <a class="project-card featured" href="tools/satellite-map/"><span class="project-kicker">Live tool · 01</span><h3>全球卫星影像</h3><p>浏览全球卫星底图、定位经纬度、加载实测站点与 SHP 图层。</p><span class="project-link">打开工具 <b>↗</b></span></a>
+        <a class="project-card" href="https://formula-image-to-word.kellen95272.chatgpt.site/" target="_blank" rel="noreferrer"><span class="project-kicker">Live tool · 02</span><h3>图片公式识别</h3><p>把公式图片识别为可编辑内容，并导出或复制到 Word。</p><span class="project-link">打开工具 <b>↗</b></span></a>
+        <a class="project-card" href="blog/"><span class="project-kicker">Notebook · 03</span><h3>Blog / Notes</h3><p>记录论文阅读、方法复现与研究过程中的阶段性思考。</p><span class="project-link">查看笔记 <b>→</b></span></a>
+        <a class="project-card" href="economics/"><span class="project-kicker">Data · 04</span><h3>经济数据分析</h3><p>用于公开数据探索、指标观察和可视化分析的专题空间。</p><span class="project-link">进入空间 <b>→</b></span></a>
+        <a class="project-card" href="lab/"><span class="project-kicker">Experiments · 05</span><h3>Lab</h3><p>原型、算法演示和各种小功能的长期实验场。</p><span class="project-link">进入实验室 <b>→</b></span></a>
+      </div>
+    </div></section>
+  </main>
+  <footer class="site-footer"><div><span class="brand-mark small">K</span><p>Kellen's academic homepage<br><span>Built for curiosity and open research.</span></p></div><p>© <span id="year">2026</span> Kellen<br><a href="mailto:07212709@cumt.edu.cn">07212709@cumt.edu.cn</a></p></footer>
+  <script src="site.js"></script>
 </body>
 </html>
