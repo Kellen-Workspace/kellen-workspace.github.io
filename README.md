@@ -8,8 +8,11 @@
 - `/blog/`：技术博客文章集合。
 - `/lab/`：实验、原型与功能演示集合。
 - `/tool/`：实用工具集合。
+- `/tool/formula-image-to-word/`：图片公式识别与 Word 导出工具，无需 ChatGPT 登录。
 - `/invest/`：经济数据与投资分析集合。
 - `/tools/satellite-map/`：现有全球卫星影像工具。
+
+图片公式识别工具要求使用者每次打开页面时输入自己的 DeepSeek API Key。Key 只保存在当前页面内存中，不写入浏览器存储；关闭或刷新页面后会被清空。API 地址固定为 DeepSeek 官方接口。
 
 顶部导航只包含 Blog、Lab、Tool、Invest。四个集合页之间可以互相访问，但没有返回主页按钮。
 

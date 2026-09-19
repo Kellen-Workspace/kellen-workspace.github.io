@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="识别公式图片，校正 LaTeX，并导出为可编辑的 Word 原生公式。">
+  <title>公式图片转 Word</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23151a27'/%3E%3Cpath d='M17 16h30v7H29l11 9-11 9h18v7H17V37l10-5-10-5V16z' fill='%237ea2ff'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css">
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">Σ</span>
+      <div><h1>公式图片转 Word</h1><p>图片识别 · LaTeX 校正 · 原生公式导出</p></div>
+    </div>
+    <span class="privacy"><i></i>密钥不会被保存</span>
+  </header>
+
+  <main class="workspace">
+    <section class="panel source-panel" aria-labelledby="source-title">
+      <div class="panel-heading">
+        <div><span class="step">01</span><h2 id="source-title">公式图片</h2></div>
+        <button id="clear-image" class="text-button" type="button" hidden>清除</button>
+      </div>
+      <label id="drop-zone" class="drop-zone" for="image-input" tabindex="0">
+        <input id="image-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+        <div id="empty-upload" class="empty-upload">
+          <span class="upload-icon" aria-hidden="true">↑</span>
+          <strong>拖入或选择公式图片</strong>
+          <span>支持 PNG、JPG、WebP、GIF，最大 10 MB</span>
+        </div>
+        <img id="image-preview" alt="待识别的公式图片" hidden>
+      </label>
+      <p id="file-meta" class="file-meta" aria-live="polite">尚未选择图片</p>
+
+      <details class="api-settings" open>
+        <summary>模型接口设置</summary>
+        <div class="settings-grid">
+          <label class="field field-wide">
+            <span>API 地址</span>
+            <input id="api-endpoint" type="url" value="https://api.deepseek.com/chat/completions" readonly aria-readonly="true" spellcheck="false">
+          </label>
+          <label class="field">
+            <span>模型名称</span>
+            <input id="model-name" type="text" placeholder="填写支持图片的模型名" spellcheck="false">
+          </label>
+          <label class="field">
+            <span>API Key</span>
+            <div class="secret-wrap">
+              <input id="api-key" type="password" placeholder="sk-..." autocomplete="off" spellcheck="false">
+              <button id="toggle-key" type="button" aria-label="显示 API Key">显示</button>
+            </div>
+          </label>
+        </div>
+        <p class="setting-note">API Key 仅保存在当前页面内存中，不会写入浏览器存储；关闭或刷新页面后需要重新输入。请求只发送到 DeepSeek 官方接口。</p>
+      </details>
+
+      <button id="recognize-button" class="primary-button" type="button" disabled>
+        <span class="button-label">开始识别</span><span class="button-arrow" aria-hidden="true">→</span>
+      </button>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel result-panel" aria-labelledby="result-title">
+      <div class="panel-heading">
+        <div><span class="step">02</span><h2 id="result-title">校正与导出</h2></div>
+        <span id="edit-state" class="edit-state">等待识别</span>
+      </div>
+
+      <label class="editor-label" for="latex-editor">
+        <span>LaTeX</span><small>可直接粘贴或修改</small>
+      </label>
+      <textarea id="latex-editor" spellcheck="false" placeholder="识别结果会显示在这里，也可以直接输入 LaTeX，例如：\frac{a}{b}"></textarea>
+
+      <div class="preview-heading"><span>公式预览</span><small id="preview-hint">输入 LaTeX 后自动更新</small></div>
+      <div id="formula-preview" class="formula-preview" aria-live="polite">
+        <span class="preview-placeholder">预览区域</span>
+      </div>
+
+      <div class="export-row">
+        <label class="field filename-field">
+          <span>文件名</span>
+          <input id="filename" type="text" value="识别公式" maxlength="80">
+        </label>
+        <div class="export-actions">
+          <button id="copy-button" class="copy-button" type="button" disabled>
+            <span class="copy-icon" aria-hidden="true">⧉</span>
+            复制到 Word
+          </button>
+          <button id="export-button" class="export-button" type="button" disabled>
+            <span class="word-icon" aria-hidden="true">W</span>
+            导出 Word
+          </button>
+        </div>
+      </div>
+      <p class="export-note">“复制到 Word”可直接粘贴为公式；若浏览器不支持富文本剪贴板，将自动复制 LaTeX。导出的文件使用可编辑的 Word 原生公式（OMML）。</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>图片与密钥只用于本次 DeepSeek 识别请求</span>
+    <span>识别结果请在导出前核对</span>
+  </footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
