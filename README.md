@@ -14,6 +14,8 @@
 
 图片公式识别工具要求使用者每次打开页面时输入自己的 DeepSeek API Key。Key 只保存在当前页面内存中，不写入浏览器存储；关闭或刷新页面后会被清空。API 地址固定为 DeepSeek 官方接口。
 
+在线版本直接从浏览器向 DeepSeek 发出识别请求；本地版本则使用项目自带的本地转发服务。不要将 API Key 写进 `content.js`、HTML 或其他仓库文件。
+
 顶部导航只包含 Blog、Lab、Tool、Invest。四个集合页之间可以互相访问，但没有返回主页按钮。
 
 ## 日常修改只编辑 `content.js`

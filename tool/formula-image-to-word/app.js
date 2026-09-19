@@ -48,9 +48,10 @@ async function recognize() {
     const image=await fileDataUrl(selectedFile); const endpoint=DEEPSEEK_ENDPOINT;
     const payload={model:els.model.value.trim(),temperature:0,messages:[{role:'user',content:[{type:'text',text:'你是数学公式 OCR。请精确识别图片中的全部公式，只返回 JSON：{"latex":"..."}。保留上下标、分式、根式、希腊字母、矩阵、分段条件和括号，不要解释。'},{type:'image_url',image_url:{url:image}}]}]};
     const localPayload={endpoint,apiKey:els.key.value.trim(),...payload};
-    let response;
-    try { response=await fetch('/api/recognize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(localPayload)}); if(response.status===404) throw new Error('NO_LOCAL_PROXY'); }
-    catch(e){ if(e.message!=='NO_LOCAL_PROXY' && location.hostname==='localhost') throw e; response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${els.key.value.trim()}`},body:JSON.stringify(payload)}); }
+    const isLocal=['localhost','127.0.0.1','::1'].includes(location.hostname);
+    const response=isLocal
+      ? await fetch('/api/recognize',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(localPayload)})
+      : await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${els.key.value.trim()}`},body:JSON.stringify(payload)});
     const data=await response.json().catch(()=>({})); if(!response.ok) throw new Error(data.error?.message||data.error||`接口返回 ${response.status}`);
     const content=data.choices?.[0]?.message?.content ?? data.output_text ?? data.content; if(!content) throw new Error('接口返回中没有找到识别结果。');
     els.latex.value=extractLatex(content); els.editState.textContent='已识别，可校正'; els.editState.classList.add('ready'); await renderPreview(); setStatus('识别完成，请核对公式后导出。','success');
