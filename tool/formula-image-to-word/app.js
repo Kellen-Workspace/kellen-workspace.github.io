@@ -55,7 +55,7 @@ async function recognize() {
     const data=await response.json().catch(()=>({})); if(!response.ok) throw new Error(data.error?.message||data.error||`接口返回 ${response.status}`);
     const content=data.choices?.[0]?.message?.content ?? data.output_text ?? data.content; if(!content) throw new Error('接口返回中没有找到识别结果。');
     els.latex.value=extractLatex(content); els.editState.textContent='已识别，可校正'; els.editState.classList.add('ready'); await renderPreview(); setStatus('识别完成，请核对公式后导出。','success');
-  } catch(e) { setStatus(`识别失败：${e.message}${location.protocol==='https:'?'。若接口限制浏览器访问，请使用本地启动方式。':''}`,'error'); }
+  } catch(e) { const mode=['localhost','127.0.0.1','::1'].includes(location.hostname)?'本地转发':'在线直连 v3'; setStatus(`识别失败（${mode}）：${e.message}`,'error'); }
   finally { els.recognize.querySelector('.button-label').textContent='开始识别'; updateButtons(); }
 }
 els.recognize.addEventListener('click',recognize);
