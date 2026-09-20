@@ -18,7 +18,7 @@ from pathlib import Path
 import akshare as ak
 import pandas as pd
 
-from industry_calculation_method import calculate_metric
+from industry_calculation_method import calculate_metric, finite
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "invest" / "industries" / "data" / "sw-industry.json"
@@ -180,21 +180,23 @@ def build(args):
             if index % 25 == 0:
                 print(f"prices {index}/{len(rows)}")
 
-    result_periods = []
+    financial_frames = {}
     for period in periods:
         print(f"financials {period}")
         financials = load_financials(period, args.refresh)
         financials["industry_code"] = financials["股票代码"].map(stock_map)
         financials = financials.dropna(subset=["industry_code"])
+        financial_frames[period] = financials
+
+    result_periods = []
+    for period in periods:
+        financials = financial_frames[period]
         industries = []
         for row in rows:
             code = str(row["行业代码"])
             group = financials[financials["industry_code"] == code]
-            profit = pd.to_numeric(group["净利润-同比增长"], errors="coerce")
-            revenue = pd.to_numeric(group["营业总收入-同比增长"], errors="coerce")
-            profit_result = calculate_metric(group, "净利润-净利润", "净利润-同比增长", "net_profit")
-            revenue_result = calculate_metric(group, "营业总收入-营业总收入", "营业总收入-同比增长", "revenue")
-            abnormal_records = profit_result.abnormal_records + revenue_result.abnormal_records
+            profit_result = calculate_metric(group, "净利润-净利润", "净利润-同比增长")
+            revenue_result = calculate_metric(group, "营业总收入-营业总收入", "营业总收入-同比增长")
             industries.append({
                 "code": code,
                 "name": str(row["行业名称"]),
@@ -207,24 +209,33 @@ def build(args):
                 "netProfitObservations": profit_result.valid_observations,
                 "positiveRevenue": revenue_result.positive_companies,
                 "revenueObservations": revenue_result.valid_observations,
-                "abnormalCompanies": len({item["code"] for item in abnormal_records}),
-                "abnormalRecords": abnormal_records,
                 "companies": int(group["股票代码"].nunique()),
             })
         industries.sort(key=lambda item: item["netProfitYoY"] if item["netProfitYoY"] is not None else -math.inf, reverse=True)
+        company_financials = []
+        for _, company in financials.iterrows():
+            company_financials.append({
+                "code": str(company["股票代码"]),
+                "name": str(company["股票简称"]),
+                "industry": str(company["industry_code"]),
+                "netProfitAmount": finite(company["净利润-净利润"]),
+                "netProfitYoY": finite(company["净利润-同比增长"]),
+                "revenueAmount": finite(company["营业总收入-营业总收入"]),
+                "revenueYoY": finite(company["营业总收入-同比增长"]),
+            })
         result_periods.append({
             "id": period,
             "label": label_for(period),
             "summary": {
                 "companies": int(financials["股票代码"].nunique()),
                 "positiveNetProfit": sum(item["positiveNetProfit"] for item in industries),
-                "abnormalRecords": sum(len(item["abnormalRecords"]) for item in industries),
             },
             "industries": industries,
+            "companyFinancials": company_financials,
         })
 
     payload = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
         "classification": "Shenwan Level 3",
         "periods": result_periods,

@@ -1,0 +1,9 @@
+.summary-grid{grid-template-columns:repeat(4,1fr)}
+.company-button{border:0;border-bottom:1px solid currentColor;background:transparent;color:var(--green);font:inherit;cursor:pointer;padding:0}
+.company-button:hover{color:var(--forest)}
+.dialog-table-wrap table{min-width:1120px}
+.dialog-table-wrap th,.dialog-table-wrap td{text-align:right}
+.dialog-table-wrap th:first-child,.dialog-table-wrap td:first-child{text-align:left}
+.dialog-table-wrap td:last-child{text-align:right;font-family:"DM Mono",monospace}
+@media(max-width:850px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.summary-grid{grid-template-columns:1fr}}
