@@ -199,3 +199,32 @@ scripts/industry_calculation_method.py
 
 网页中净利润、营业收入同比增长公司数量可以点击。弹窗仅列出所选报告期同比大于零的公司，并同时显示本期、前一期、前两期的同比和具体金额；较早报告期没有足够历史数据时显示“—”。
 
+## 蛇谱：物种档案、照片与日志
+
+蛇谱入口位于 `lab/serpent-phylogeny/`。选择节点会高亮该节点到“蛇亚目”根节点的完整路径；“寻找最近共同祖先”可以比较任意两个已经录入的物种。树中的争议关系使用虚线显示。
+
+物种的结构化内容集中在 `lab/serpent-phylogeny/species-data.js`。每个物种拥有独立网址和文件夹：
+
+```text
+lab/serpent-phylogeny/taxa/物种ID/index.html
+lab/serpent-phylogeny/taxa/物种ID/photos/
+lab/serpent-phylogeny/taxa/物种ID/logs/
+```
+
+### 新增照片
+
+直接在 GitHub 网页把图片上传到该物种的 `photos/` 文件夹。工作流 `.github/workflows/update-serpent-assets.yml` 会自动更新照片清单，不再要求手动运行命令。
+
+### 新增观察或学习日志
+
+1. 复制 `lab/serpent-phylogeny/_templates/observation-log.html`。
+2. 新日志保存为 `taxa/物种ID/logs/YYYY-MM-DD-英文短名/index.html`。
+3. 修改页面顶部的 `log-date`、`log-title`、`log-summary` 和 `log-type`。
+4. 编辑正文后提交。GitHub Actions 会自动更新日志清单，网页按照 `log-date` 从新到旧排列。
+
+如果需要在本地手动刷新照片和日志清单，在网站根目录运行：
+
+```powershell
+python scripts/update_serpent_photos.py
+```
+
