@@ -9,7 +9,8 @@
 - `/lab/`：实验、原型与功能演示集合。
 - `/tool/`：实用工具集合。
 - `/tool/formula-image-to-word/`：图片公式识别与 Word 导出工具，无需 ChatGPT 登录。
-- `/invest/`：经济数据与投资分析集合。
+- `/invest/`：全英文投资研究入口，分为 Policy、Banking、Commodities、Real Estate、Industries、Cycles、A-Shares 七个模块。
+- `/invest/industries/`：申万三级行业财务增速与价格表现看板。
 - `/tools/satellite-map/`：现有全球卫星影像工具。
 
 图片公式识别工具要求使用者每次打开页面时输入自己的 DeepSeek API Key。Key 只保存在当前页面内存中，不写入浏览器存储；关闭或刷新页面后会被清空。API 地址固定为 DeepSeek 官方接口。
@@ -131,3 +132,32 @@ introduction: [
 - `blog/`、`lab/`、`tool/`、`invest/`：四个功能区入口。
 
 修改 `content.js` 并提交到 `main` 分支后，GitHub Pages 会自动重新部署。
+
+## Invest 与 Industries 数据看板
+
+Invest 的七个模块入口直接维护在 `invest/index.html`。目前 Industries 的第一个看板已经启用，其他模块均已建立英文占位页，后续可继续添加多个分析功能。
+
+行业看板的数据文件位于：
+
+```text
+invest/industries/data/sw-industry.json
+```
+
+更新程序位于 `scripts/update_sw_industry.py`。它会：
+
+1. 读取最新申万三级行业及成分股分类；
+2. 读取最近八个已完成报告期的 A 股业绩报表；
+3. 计算各行业营业总收入同比、净利润同比和正增长公司数量；
+4. 以申万三级行业指数的季度涨幅作为行业平均股价表现的稳定代理；
+5. 输出供 GitHub Pages 直接读取的静态 JSON。
+
+仓库内的 `.github/workflows/update-industry-data.yml` 默认每月 5 日自动刷新，也可以在 GitHub 的 Actions 页面手动运行。自动更新不需要任何 API Key。公开数据源偶尔可能调整网页结构；如果自动任务失败，先查看 Actions 日志，再按 AKShare 最新字段修改脚本。
+
+本地手动更新命令：
+
+```powershell
+pip install -r requirements-industry.txt
+python scripts/update_sw_industry.py --refresh
+```
+
+统计口径说明：财务同比为报告期累计口径下的行业成分股合计值同比（根据公司披露的当期值与同比重建上年同期合计值）；历史数据使用当前申万三级成分映射，存在分类变更与幸存者偏差；价格表现使用行业指数季度涨幅而不是逐只股票简单平均。页面底部也展示了同样的方法说明。

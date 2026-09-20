@@ -1,1 +1,37 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#315f40"><title>invest · Kellen</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="../collection.css"></head><body data-collection="invest"><header class="topbar"><nav class="nav" aria-label="功能导航"><a data-nav="blog" href="../blog/">Blog</a><a data-nav="lab" href="../lab/">Lab</a><a data-nav="tool" href="../tool/">Tool</a><a data-nav="invest" href="../invest/">Invest</a></nav></header><main class="collection-main"><span id="collection-label" class="collection-label"></span><h1 id="collection-title"></h1><p id="collection-description" class="collection-description"></p><div class="collection-rule"></div><section id="item-list" class="item-list" aria-label="内容列表"></section></main><footer>© <span id="year"></span> Kellen</footer><script src="../content.js"></script><script src="../collection.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#163c30">
+  <title>Invest · Kellen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="invest.css">
+</head>
+<body>
+  <header class="invest-header">
+    <a class="brand" href="./" aria-label="Invest home">INVEST / RESEARCH</a>
+    <nav aria-label="Primary sections"><a href="../blog/">Blog</a><a href="../lab/">Lab</a><a href="../tool/">Tool</a><a class="active" href="./">Invest</a></nav>
+  </header>
+  <main class="hub-shell">
+    <section class="hub-hero">
+      <p class="eyebrow">ECONOMIC &amp; MARKET RESEARCH</p>
+      <h1>Signals, cycles,<br>and market structure.</h1>
+      <p class="lead">A growing collection of reproducible dashboards for tracking policy, macro conditions, industries, and China’s equity market.</p>
+    </section>
+    <section class="module-grid" aria-label="Investment research modules">
+      <a class="module-card" href="policy/"><span>01</span><h2>Policy</h2><p>Policy releases, priorities, and transmission channels.</p><b>Open module →</b></a>
+      <a class="module-card" href="banking/"><span>02</span><h2>Banking</h2><p>Credit, liquidity, rates, and banking-sector indicators.</p><b>Open module →</b></a>
+      <a class="module-card" href="commodities/"><span>03</span><h2>Commodities</h2><p>Prices, inventories, margins, and supply-demand signals.</p><b>Open module →</b></a>
+      <a class="module-card" href="real-estate/"><span>04</span><h2>Real Estate</h2><p>Sales, construction, land, financing, and housing cycles.</p><b>Open module →</b></a>
+      <a class="module-card featured" href="industries/"><span>05 · LIVE</span><h2>Industries</h2><p>Shenwan Level 3 financial growth and price-performance monitor.</p><b>Explore dashboard →</b></a>
+      <a class="module-card" href="cycles/"><span>06</span><h2>Cycles</h2><p>Growth, inflation, credit, inventory, and profit cycles.</p><b>Open module →</b></a>
+      <a class="module-card" href="a-shares/"><span>07</span><h2>A-Shares</h2><p>Valuation, breadth, earnings, flows, and market structure.</p><b>Open module →</b></a>
+    </section>
+  </main>
+  <footer>© <span id="year"></span> Kellen · Data for research purposes only</footer>
+  <script>document.getElementById('year').textContent=new Date().getFullYear()</script>
+</body>
+</html>
