@@ -18,6 +18,8 @@ from pathlib import Path
 import akshare as ak
 import pandas as pd
 
+from industry_calculation_method import calculate_metric
+
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "invest" / "industries" / "data" / "sw-industry.json"
 CACHE = ROOT / ".cache" / "sw-industry"
@@ -44,7 +46,7 @@ def report_periods(count: int = 8) -> list[str]:
 
 def label_for(period: str) -> str:
     year, month = period[:4], period[4:6]
-    return {"03": f"{year} Q1", "06": f"{year} H1", "09": f"{year} Q3", "12": f"{year} FY"}[month]
+    return {"03": f"{year}年一季报", "06": f"{year}年中报", "09": f"{year}年三季报", "12": f"{year}年年报"}[month]
 
 
 def finite(value):
@@ -59,28 +61,6 @@ def mean(values):
     clean = [finite(value) for value in values]
     clean = [value for value in clean if value is not None]
     return round(sum(clean) / len(clean), 2) if clean else None
-
-
-def aggregate_growth(current_values, yoy_values):
-    """Reconstruct prior-period totals and calculate aggregate industry YoY."""
-    current = pd.to_numeric(current_values, errors="coerce")
-    yoy = pd.to_numeric(yoy_values, errors="coerce")
-    valid = current.notna() & yoy.notna() & ((1 + yoy / 100).abs() > 1e-9)
-    if not valid.any():
-        return None
-    current_total = current[valid].sum()
-    prior_total = (current[valid] / (1 + yoy[valid] / 100)).sum()
-    if abs(prior_total) < 1e-9:
-        return None
-    return round((current_total / prior_total - 1) * 100, 2)
-
-
-def romanize(text: str) -> str:
-    try:
-        from pypinyin import lazy_pinyin
-        return " ".join(word.capitalize() for word in lazy_pinyin(str(text)))
-    except ImportError:
-        return str(text)
 
 
 def cache_frame(name: str, loader, refresh: bool) -> pd.DataFrame:
@@ -212,18 +192,23 @@ def build(args):
             group = financials[financials["industry_code"] == code]
             profit = pd.to_numeric(group["净利润-同比增长"], errors="coerce")
             revenue = pd.to_numeric(group["营业总收入-同比增长"], errors="coerce")
+            profit_result = calculate_metric(group, "净利润-净利润", "净利润-同比增长", "net_profit")
+            revenue_result = calculate_metric(group, "营业总收入-营业总收入", "营业总收入-同比增长", "revenue")
+            abnormal_records = profit_result.abnormal_records + revenue_result.abnormal_records
             industries.append({
                 "code": code,
-                "name": romanize(row["行业名称"]),
+                "name": str(row["行业名称"]),
                 "nameZh": str(row["行业名称"]),
-                "parent": romanize(row["上级行业"]),
-                "netProfitYoY": aggregate_growth(group["净利润-净利润"], profit),
-                "revenueYoY": aggregate_growth(group["营业总收入-营业总收入"], revenue),
+                "parent": str(row["上级行业"]),
+                "netProfitYoY": profit_result.growth,
+                "revenueYoY": revenue_result.growth,
                 "priceReturn": quarter_return(price_history.get(code), period),
-                "positiveNetProfit": int((profit > 0).sum()),
-                "netProfitObservations": int(profit.notna().sum()),
-                "positiveRevenue": int((revenue > 0).sum()),
-                "revenueObservations": int(revenue.notna().sum()),
+                "positiveNetProfit": profit_result.positive_companies,
+                "netProfitObservations": profit_result.valid_observations,
+                "positiveRevenue": revenue_result.positive_companies,
+                "revenueObservations": revenue_result.valid_observations,
+                "abnormalCompanies": len({item["code"] for item in abnormal_records}),
+                "abnormalRecords": abnormal_records,
                 "companies": int(group["股票代码"].nunique()),
             })
         industries.sort(key=lambda item: item["netProfitYoY"] if item["netProfitYoY"] is not None else -math.inf, reverse=True)
@@ -232,7 +217,8 @@ def build(args):
             "label": label_for(period),
             "summary": {
                 "companies": int(financials["股票代码"].nunique()),
-                "positiveNetProfit": int((pd.to_numeric(financials["净利润-同比增长"], errors="coerce") > 0).sum()),
+                "positiveNetProfit": sum(item["positiveNetProfit"] for item in industries),
+                "abnormalRecords": sum(len(item["abnormalRecords"]) for item in industries),
             },
             "industries": industries,
         })

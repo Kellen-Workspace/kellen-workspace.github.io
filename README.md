@@ -9,7 +9,7 @@
 - `/lab/`：实验、原型与功能演示集合。
 - `/tool/`：实用工具集合。
 - `/tool/formula-image-to-word/`：图片公式识别与 Word 导出工具，无需 ChatGPT 登录。
-- `/invest/`：全英文投资研究入口，分为 Policy、Banking、Commodities、Real Estate、Industries、Cycles、A-Shares 七个模块。
+- `/invest/`：中文投资研究入口，分为政策、银行、大宗商品、房地产、行业、周期、A股七个模块。
 - `/invest/industries/`：申万三级行业财务增速与价格表现看板。
 - `/tools/satellite-map/`：现有全球卫星影像工具。
 
@@ -133,9 +133,9 @@ introduction: [
 
 修改 `content.js` 并提交到 `main` 分支后，GitHub Pages 会自动重新部署。
 
-## Invest 与 Industries 数据看板
+## 投资与行业数据看板
 
-Invest 的七个模块入口直接维护在 `invest/index.html`。目前 Industries 的第一个看板已经启用，其他模块均已建立英文占位页，后续可继续添加多个分析功能。
+投资区的七个模块入口直接维护在 `invest/index.html`。目前“行业”的第一个看板已经启用，其他模块均已建立中文占位页，后续可继续添加多个分析功能。
 
 行业看板的数据文件位于：
 
@@ -147,9 +147,11 @@ invest/industries/data/sw-industry.json
 
 1. 读取最新申万三级行业及成分股分类；
 2. 读取最近八个已完成报告期的 A 股业绩报表；
-3. 计算各行业营业总收入同比、净利润同比和正增长公司数量；
-4. 以申万三级行业指数的季度涨幅作为行业平均股价表现的稳定代理；
-5. 输出供 GitHub Pages 直接读取的静态 JSON。
+3. 按统一规则识别并剔除基期异常、极端同比和同行业离群记录；
+4. 计算剔除异常后的行业营业总收入同比、净利润同比和正增长公司数量；
+5. 单独输出异常公司数量及公司、指标、同比、基期和异常原因明细；
+6. 以申万三级行业指数的季度涨幅作为行业平均股价表现的稳定代理；
+7. 输出供 GitHub Pages 直接读取的静态 JSON。
 
 仓库内的 `.github/workflows/update-industry-data.yml` 默认每月 5 日自动刷新，也可以在 GitHub 的 Actions 页面手动运行。自动更新不需要任何 API Key。公开数据源偶尔可能调整网页结构；如果自动任务失败，先查看 Actions 日志，再按 AKShare 最新字段修改脚本。
 
@@ -160,4 +162,24 @@ pip install -r requirements-industry.txt
 python scripts/update_sw_industry.py --refresh
 ```
 
-统计口径说明：财务同比为报告期累计口径下的行业成分股合计值同比（根据公司披露的当期值与同比重建上年同期合计值）；历史数据使用当前申万三级成分映射，存在分类变更与幸存者偏差；价格表现使用行业指数季度涨幅而不是逐只股票简单平均。页面底部也展示了同样的方法说明。
+## 修改统计口径与异常规则
+
+所有计算公式、异常识别阈值和中文解释统一放在：
+
+```text
+scripts/industry_calculation_method.py
+```
+
+这是统计口径的唯一配置文件。以后发现某类数据不合理时，可以在其中修改 `RULES`：
+
+- `hard_yoy_limit`：同比绝对值硬阈值，超过后直接剔除；
+- `moderate_yoy_limit`：判断小基期和 MAD 离群时要求达到的最低偏离；
+- `absolute_baseline_floor`：基期绝对金额下限；
+- `relative_baseline_ratio`：相对同行业基期中位数的小基期比例；
+- `mad_multiplier`：同行业 MAD 稳健离群倍数；
+- `minimum_mad_sample`：启用 MAD 判断所需的最少样本数。
+
+修改后运行数据更新程序即可重新生成全部结果。不要在网页 JavaScript 或 `update_sw_industry.py` 中另写一套阈值，以免统计口径不一致。
+
+当前统计口径：先根据公司当期值与披露同比反推上年同期值；异常的“公司×指标”记录从相应指标中剔除；再分别合计剩余公司的当期值与上年同期值并计算行业同比。缺失值不计为异常。营收与净利润分别识别异常，同一家公司可能有两条异常记录，但网页的“异常公司”按股票代码去重。历史数据使用当前申万三级成分映射，存在分类变更与幸存者偏差；价格表现使用行业指数季度涨幅。页面底部也展示了简化版说明。
+
