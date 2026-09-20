@@ -46,7 +46,9 @@ window.SERPENT_TREE={
               {id:"lamprophiid-lineages",name:"闪鳞蛇类相关支系",latin:"Lamprophiid lineages",rank:"复合支系",type:"debated",status:"简化合并展示",note:"若干以非洲为中心的科级支系在不同分类方案中拆分程度不同，第一版暂不继续细分。"}
             ]},
             {id:"colubrid-lineages",name:"游蛇类群",latin:"Colubrid lineages",rank:"复合支系",type:"clade",note:"广义游蛇相关类群物种极多，第一版只保留几个学习入口。",children:[
-              {id:"colubridae",name:"游蛇科",latin:"Colubridae",rank:"科",type:"family",note:"多样性极高，后续可按游蛇亚科等继续细分。"},
+              {id:"colubridae",name:"游蛇科",latin:"Colubridae",rank:"科",type:"family",note:"多样性极高，后续可按游蛇亚科等继续细分。",children:[
+                {id:"lycodon-rufozonatus",name:"赤练蛇",latin:"Lycodon rufozonatus",rank:"种",type:"species",note:"东亚分布的狼蛇属成员。2025 年的综合分类研究重新限定了其物种边界与分布范围。"}
+              ]},
               {id:"natricidae",name:"水游蛇科",latin:"Natricidae",rank:"科",type:"family",note:"包含许多与水域环境关系密切的无毒或弱毒蛇类。"},
               {id:"dipsadidae",name:"新大陆水蛇科",latin:"Dipsadidae",rank:"科",type:"family",note:"以新大陆为中心、生态与形态高度多样的支系。"}
             ]}

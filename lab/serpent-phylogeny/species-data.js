@@ -56,5 +56,24 @@ window.SERPENT_SPECIES={
     similar:["眼镜蛇属 Naja 的多个物种","其他眼镜王蛇属候选或新拆分物种"],
     distribution:{label:"南亚与东南亚的传统广义范围",note:"传统广义 Ophiophagus hannah 已涉及分类拆分，地图只能作为学习入口，物种记录应结合地点重新核验。",polygons:[[[28,78],[28,94],[24,104],[23,112],[10,118],[-6,106],[1,96],[10,90],[20,84]]]},
     sources:[{label:"The Reptile Database",url:"https://reptile-database.reptarium.cz/species?genus=Ophiophagus&species=hannah"}]
+  },
+  "lycodon-rufozonatus":{
+    page:"taxa/lycodon-rufozonatus/",
+    englishName:"Red-banded wolf snake",
+    summary:"赤练蛇是游蛇科狼蛇属成员。醒目的红黑环带适合训练形态观察，但仅凭体色不足以可靠鉴别，记录地点、鳞片与完整身体纹样同样重要。",
+    profile:{
+      "分类位置":"游蛇科 · 狼蛇属",
+      "体长信息":"个体和地区差异需结合可靠记录核验",
+      "安全提示":"不要仅根据网页或体色判断危险性，也不要徒手接触",
+      "食性记录":"鱼、蛙、蜥蜴、蛇、幼鸟及小型哺乳动物等",
+      "栖息环境":"山地森林、山麓居民区、稻田及河岸环境等",
+      "活动节律":"待结合地区与观察记录继续补充",
+      "繁殖方式":"待补充可靠来源",
+      "分类动态":"2025 年研究重新限定了本种及近似种的边界"
+    },
+    identification:["常见醒目的红色与深色横带，但颜色会受个体、年龄和照片光线影响","与近似种的可靠区分可能需要鳞片计数、地理位置和分子证据","照片记录应尽量包括头部、背部、腹部、尾部以及完整身体纹样"],
+    similar:["Lycodon walli（2025 年提升为独立物种）","Lycodon duytan（2025 年描述的新种）","其他具有红黑或黄黑环带的狼蛇属成员"],
+    distribution:{label:"中国大陆、台湾、朝鲜半岛、俄罗斯远东南部、对马岛及越南东北部",note:"依据 2025 年分类修订绘制的概略范围。红色区域不代表连续占据，也不能替代标本或权威分布数据。",polygons:[[[47,130],[43,142],[34,138],[24,122],[20,108],[24,99],[35,103],[42,116]]]},
+    sources:[{label:"Nguyen、Poyarkov 与 Vogel（2025）分类修订",url:"https://pmc.ncbi.nlm.nih.gov/articles/PMC12455217/"},{label:"GBIF 物种记录",url:"https://www.gbif.org/species/5223677"}]
   }
 };
