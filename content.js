@@ -29,7 +29,12 @@ window.SITE_CONTENT = {
 
 window.SITE_COLLECTIONS = {
   blog: { label: "BLOG", title: "Blog", description: "Technical notes, paper reading, method reproduction, and research workflows.", emptyText: "第一篇技术文章将在这里出现。", items: [] },
-  lab: { label: "LAB", title: "Lab", description: "Experiments, prototypes, algorithm demonstrations, and small ideas in progress.", emptyText: "第一个实验项目将在这里出现。", items: [] },
+  lab: {
+    label: "LAB", title: "Lab", description: "Experiments, prototypes, algorithm demonstrations, and small ideas in progress.", emptyText: "第一个实验项目将在这里出现。",
+    items: [
+      { title: "蛇亚目系统发育图谱", description: "用可展开的系统发育树学习蛇类主要演化分支，并为感兴趣的节点建立照片档案。", meta: "Biology · Interactive", url: "serpent-phylogeny/" }
+    ]
+  },
   tool: {
     label: "TOOL", title: "Tools", description: "Research utilities and practical web tools developed for daily work.", emptyText: "新的研究工具将在这里出现。",
     items: [

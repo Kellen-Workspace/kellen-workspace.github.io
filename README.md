@@ -7,6 +7,7 @@
 - `/`：个人主页，包含个人资料、研究方向、简介、荣誉和论文。
 - `/blog/`：技术博客文章集合。
 - `/lab/`：实验、原型与功能演示集合。
+- `/lab/serpent-phylogeny/`：蛇亚目系统发育图谱与节点照片档案。
 - `/tool/`：实用工具集合。
 - `/tool/formula-image-to-word/`：图片公式识别与 Word 导出工具，无需 ChatGPT 登录。
 - `/invest/`：中文投资研究入口，分为政策、银行、大宗商品、房地产、行业、周期、A股七个模块。
@@ -132,6 +133,28 @@ introduction: [
 - `blog/`、`lab/`、`tool/`、`invest/`：四个功能区入口。
 
 修改 `content.js` 并提交到 `main` 分支后，GitHub Pages 会自动重新部署。
+
+## 蛇亚目系统发育图谱
+
+树的节点和说明集中在 `lab/serpent-phylogeny/tree-data.js`。每个节点必须有唯一 `id`；增加感兴趣的物种时，在对应科或亚科的 `children` 中增加节点即可。
+
+照片按节点 ID 分文件夹保存，例如：
+
+```text
+lab/serpent-phylogeny/taxa/python-bivittatus/photos/
+lab/serpent-phylogeny/taxa/boa-constrictor/photos/
+lab/serpent-phylogeny/taxa/ophiophagus-hannah/photos/
+```
+
+支持 JPG、PNG、WebP、GIF 和 AVIF。放入照片后运行：
+
+```powershell
+python scripts/update_serpent_photos.py
+```
+
+脚本会更新 `lab/serpent-phylogeny/photos/manifest.js`。照片文件与该清单需要一并提交。浏览器不能自动列出 GitHub Pages 文件夹，因此只放照片但不更新清单时，网页不会显示新图片。
+
+照片浏览器会把当前图片放在中央并保持清晰；已看图片移到左侧，未看图片位于右侧，两侧图片会缩小并虚化。可以点击左右箭头、键盘方向键或直接点击两侧图片切换。
 
 ## 投资与行业数据看板
 
