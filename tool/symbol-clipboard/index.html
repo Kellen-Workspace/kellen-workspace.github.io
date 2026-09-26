@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#173c31">
+  <title>学术符号速查与复制 · Kellen Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260926-1">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../">← TOOL</a><nav><a href="../../blog/">Blog</a><a href="../../lab/">Lab</a><a class="active" href="../">Tool</a><a href="../../invest/">Invest</a></nav></header>
+  <main>
+    <section class="hero"><div><p class="eyebrow">ACADEMIC SYMBOL CLIPBOARD</p><h1>学术符号<br>速查与复制</h1></div><div class="hero-copy"><p>点击大号符号复制 Unicode；点击代码标签复制 Markdown 数学语法。适合论文笔记、公式、代码注释与数据表格。</p><p class="compatibility">Markdown 数学语法需要目标编辑器支持 LaTeX、KaTeX 或 MathJax。</p></div></section>
+    <section class="toolbar" aria-label="符号筛选"><label class="search"><span>搜索</span><input id="search" type="search" placeholder="输入符号、alpha、变化、求和……" autocomplete="off"></label><div id="filters" class="filters"></div></section>
+    <section class="clipboard-panel" aria-live="polite"><div><p class="eyebrow">CURRENT SYMBOL</p><div class="current-symbol" id="current-symbol">α</div></div><div class="current-copy"><p id="current-name">Alpha · 阿尔法</p><code id="current-markdown">$\alpha$</code><div><button id="copy-symbol" type="button">复制符号</button><button id="copy-markdown" class="secondary" type="button">复制 Markdown</button></div></div></section>
+    <div id="symbol-sections"></div>
+    <div id="empty" class="empty" hidden>没有找到相符的符号，请尝试名称、用途或 Markdown 命令。</div>
+    <section class="usage-note"><div><p class="eyebrow">USAGE</p><h2>两种复制方式</h2></div><div><p><strong>Unicode</strong> 适合直接粘贴到 Word、表格、代码注释或普通文本，例如 <code>Δ</code>。</p><p><strong>Markdown 数学语法</strong> 适合支持数学渲染的 Markdown 编辑器，例如 <code>$\Delta$</code>。</p></div></section>
+  </main>
+  <div id="toast" class="toast" role="status"></div>
+  <footer>© <span id="year"></span> Kellen · Symbols stay local in your browser</footer>
+  <script src="symbols.js?v=20260926-1"></script><script src="app.js?v=20260926-1"></script>
+</body>
+</html>

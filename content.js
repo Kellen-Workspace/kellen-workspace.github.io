@@ -39,7 +39,8 @@ window.SITE_COLLECTIONS = {
     label: "TOOL", title: "Tools", description: "Research utilities and practical web tools developed for daily work.", emptyText: "新的研究工具将在这里出现。",
     items: [
       { title: "全球卫星影像", description: "浏览卫星底图、定位经纬度，并加载实测站点与 SHP 图层。", meta: "Geospatial · Live", url: "../tools/satellite-map/" },
-      { title: "图片公式识别", description: "识别公式图片，并导出或复制可编辑公式到 Word。每次使用时输入自己的 API Key，页面不会保存密钥。", meta: "OCR · Live", url: "formula-image-to-word/?v=20260919-3" }
+      { title: "图片公式识别", description: "识别公式图片，并导出或复制可编辑公式到 Word。每次使用时输入自己的 API Key，页面不会保存密钥。", meta: "OCR · Live", url: "formula-image-to-word/?v=20260919-3" },
+      { title: "学术符号速查与复制", description: "点击复制希腊字母、变化符号、数学运算符与箭头，并同步查看可用于 Markdown 数学公式的写法。", meta: "Symbols · Clipboard", url: "symbol-clipboard/" }
     ]
   },
   invest: { label: "INVEST", title: "Invest", description: "Economic data, market observations, and reproducible quantitative analysis.", emptyText: "第一项经济数据分析将在这里出现。", items: [] }

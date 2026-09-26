@@ -228,3 +228,26 @@ lab/serpent-phylogeny/taxa/物种ID/logs/
 python scripts/update_serpent_photos.py
 ```
 
+## 学术符号速查与复制
+
+工具入口位于 `tool/symbol-clipboard/`。点击符号卡片中的大号字符复制 Unicode，点击卡片底部的代码标签复制 Markdown/LaTeX 数学语法。
+
+所有符号集中维护在：
+
+```text
+tool/symbol-clipboard/symbols.js
+```
+
+新增符号时，在对应分组的 `items` 数组中添加：
+
+```js
+{
+  symbol: "Δ",
+  name: "Delta",
+  cn: "变化量",
+  markdown: "$\\Delta$"
+}
+```
+
+页面支持按分组筛选和按符号、中文名、英文名、用途或 Markdown 命令搜索。Markdown 数学语法需要目标编辑器支持 LaTeX、KaTeX 或 MathJax。
+
