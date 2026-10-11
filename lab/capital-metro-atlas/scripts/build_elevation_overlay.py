@@ -6,6 +6,7 @@ import io
 import json
 import math
 import urllib.request
+import time
 from pathlib import Path
 
 from PIL import Image, ImageDraw
@@ -37,8 +38,15 @@ def tile(x: int, y: int) -> Image.Image:
         TERRARIUM.format(z=ZOOM, x=x, y=y),
         headers={"User-Agent": "capital-metro-atlas/1.0"},
     )
-    with urllib.request.urlopen(request, timeout=45) as response:
-        return Image.open(io.BytesIO(response.read())).convert("RGB")
+    last_error = None
+    for attempt in range(5):
+        try:
+            with urllib.request.urlopen(request, timeout=45) as response:
+                return Image.open(io.BytesIO(response.read())).convert("RGB")
+        except Exception as error:
+            last_error = error
+            time.sleep(1.5 * (attempt + 1))
+    raise RuntimeError(f"Unable to download terrain tile {ZOOM}/{x}/{y}") from last_error
 
 
 def draw_geometry(draw: ImageDraw.ImageDraw, geometry: dict, origin: tuple[int, int]) -> None:
