@@ -32,7 +32,8 @@ window.SITE_COLLECTIONS = {
   lab: {
     label: "LAB", title: "Lab", description: "Experiments, prototypes, algorithm demonstrations, and small ideas in progress.", emptyText: "第一个实验项目将在这里出现。",
     items: [
-      { title: "蛇亚目系统发育图谱", description: "用可展开的系统发育树学习蛇类主要演化分支，并为感兴趣的节点建立照片档案。", meta: "Biology · Interactive", url: "serpent-phylogeny/" }
+      { title: "蛇亚目系统发育图谱", description: "用可展开的系统发育树学习蛇类主要演化分支，并为感兴趣的节点建立照片档案。", meta: "Biology · Interactive", url: "serpent-phylogeny/" },
+      { title: "首都都市圈空间研究", description: "以京津冀行政区划、行政中心与海拔地形为骨架，持续叠加交通、产业、人口与住房等空间要素。", meta: "Geospatial · Interactive", url: "capital-metro-atlas/" }
     ]
   },
   tool: {
