@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="./styles.css?v=20261011-1">
+  <link rel="stylesheet" href="./styles.css?v=20261012-2">
 </head>
 <body>
   <header class="topbar">
@@ -25,14 +25,24 @@
       <section class="intro">
         <p class="eyebrow">JING–JIN–JI · BASE MAP 01</p>
         <h1>首都都市圈<br>基础空间骨架</h1>
-        <p>以北京、天津与河北为研究范围，先建立行政区划、行政中心与地形约束，后续逐层叠加交通、产业、人口和住房数据。</p>
+        <p>以京津冀全域作为产业协同背景，重点突出首都都市圈功能圈和雄安新区，后续逐层叠加交通、产业、人口和住房数据。</p>
       </section>
 
       <section class="summary-grid" aria-label="数据摘要">
-        <div><strong id="province-count">—</strong><span>省级单元</span></div>
-        <div><strong id="city-count">—</strong><span>地市级单元</span></div>
-        <div><strong id="district-count">—</strong><span>区县级单元</span></div>
+        <div><strong id="province-count">—</strong><span>京津冀省级单元</span></div>
+        <div><strong id="city-count">—</strong><span>京津冀地市级单元</span></div>
+        <div><strong id="district-count">—</strong><span>京津冀区县级单元</span></div>
         <div><strong id="seat-count">—</strong><span>行政中心点</span></div>
+      </section>
+
+      <section class="focus-section" aria-labelledby="focus-title">
+        <div><p class="eyebrow">QUICK VIEWS</p><h2 id="focus-title">一键切换研究范围</h2></div>
+        <div class="view-buttons">
+          <button type="button" data-view="all">京津冀全域</button>
+          <button type="button" data-view="functional">首都都市圈</button>
+          <button class="active" type="button" data-view="xiongan">雄安新区</button>
+        </div>
+        <p id="view-note">默认定位雄安新区，显示三县及四个托管乡镇的规划范围。</p>
       </section>
 
       <section class="search-section">
@@ -58,6 +68,8 @@
 
       <section class="layer-group">
         <div class="section-title"><div><p class="eyebrow">ADMINISTRATION</p><h2>行政空间框架</h2></div><button class="group-toggle" data-group="admin" type="button">全部</button></div>
+        <label class="layer-control featured"><input type="checkbox" data-layer="capital-circle" checked><span class="scope-key functional"></span><span><b>首都都市圈功能圈</b><small>官方约 4.2 万平方公里实体范围</small></span></label>
+        <label class="layer-control featured"><input type="checkbox" data-layer="xiongan" checked><span class="scope-key xiongan"></span><span><b>雄安新区规划范围</b><small>三县及四个外围托管乡镇</small></span></label>
         <label class="layer-control"><input type="checkbox" data-layer="province" checked><span class="line-key province"></span><span><b>省级边界</b><small>北京、天津、河北</small></span></label>
         <label class="layer-control"><input type="checkbox" data-layer="city" checked><span class="line-key city"></span><span><b>地市级边界</b><small>直辖市与河北地级市</small></span></label>
         <label class="layer-control"><input type="checkbox" data-layer="district" checked><span class="line-key district"></span><span><b>区县边界</b><small>放大后显示更清晰</small></span></label>
@@ -81,11 +93,11 @@
       <div id="map"></div>
       <button id="panel-open" class="panel-open" type="button">图层与检索</button>
       <div id="map-status" class="map-status"><span class="pulse"></span>正在加载空间数据</div>
-      <div class="map-caption"><span>二维研究底图 · 2026-10-11</span><span id="pointer-coordinates">移动鼠标查看坐标</span></div>
+      <div class="map-caption"><span>二维研究底图 · 2026-10-12</span><span id="pointer-coordinates">移动鼠标查看坐标</span></div>
     </section>
   </main>
 
   <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
-  <script src="./app.js?v=20261011-1"></script>
+  <script src="./app.js?v=20261012-2"></script>
 </body>
 </html>
