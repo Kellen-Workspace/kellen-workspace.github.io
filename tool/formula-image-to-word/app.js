@@ -28,6 +28,20 @@ els.input.addEventListener('change', e => chooseFile(e.target.files[0]));
 ['dragenter','dragover'].forEach(n=>els.drop.addEventListener(n,e=>{e.preventDefault();els.drop.classList.add('dragging');}));
 ['dragleave','drop'].forEach(n=>els.drop.addEventListener(n,e=>{e.preventDefault();els.drop.classList.remove('dragging');}));
 els.drop.addEventListener('drop',e=>chooseFile(e.dataTransfer.files[0]));
+document.addEventListener('paste',e=>{
+  const imageItem=Array.from(e.clipboardData?.items||[]).find(item=>item.kind==='file'&&item.type.startsWith('image/'));
+  if(!imageItem)return;
+  const blob=imageItem.getAsFile();
+  if(!blob){setStatus('无法读取剪贴板中的图片，请重新复制后再试。','error');return;}
+  e.preventDefault();
+  const extension={
+    'image/jpeg':'jpg','image/png':'png','image/webp':'webp','image/gif':'gif'
+  }[blob.type]||'png';
+  const stamp=new Date().toISOString().replace(/[:.]/g,'-');
+  const file=new File([blob],`clipboard-${stamp}.${extension}`,{type:blob.type,lastModified:Date.now()});
+  chooseFile(file);
+  setStatus('已从剪贴板读取图片，可以开始识别。','success');
+});
 els.drop.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();els.input.click();}});
 els.clear.addEventListener('click',()=>{selectedFile=null;els.input.value='';els.preview.removeAttribute('src');els.preview.hidden=true;els.empty.hidden=false;els.clear.hidden=true;els.meta.textContent='尚未选择图片';updateButtons();setStatus();});
 els.toggleKey.addEventListener('click',()=>{const show=els.key.type==='password';els.key.type=show?'text':'password';els.toggleKey.textContent=show?'隐藏':'显示';els.toggleKey.setAttribute('aria-label',show?'隐藏 API Key':'显示 API Key');});
