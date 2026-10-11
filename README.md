@@ -8,6 +8,7 @@
 - `/blog/`：技术博客文章集合。
 - `/lab/`：实验、原型与功能演示集合。
 - `/lab/serpent-phylogeny/`：蛇亚目系统发育图谱与节点照片档案。
+- `/lab/capital-metro-atlas/`：首都都市圈二维空间研究地图，包含京津冀行政区划、行政中心和海拔地形。
 - `/tool/`：实用工具集合。
 - `/tool/formula-image-to-word/`：图片公式识别与 Word 导出工具，无需 ChatGPT 登录。
 - `/invest/`：中文投资研究入口，分为政策、银行、大宗商品、房地产、行业、周期、A股七个模块。
@@ -251,3 +252,29 @@ tool/symbol-clipboard/symbols.js
 
 页面支持按分组筛选和按符号、中文名、英文名、用途或 Markdown 命令搜索。Markdown 数学语法需要目标编辑器支持 LaTeX、KaTeX 或 MathJax。
 
+
+
+## 首都都市圈空间研究
+
+入口位于 `lab/capital-metro-atlas/`。第一阶段以京津冀为研究范围，包含 3 个省级单元、13 个地市级单元、199 个区县级单元、215 个行政中心参考点，以及四级海拔分层和地形阴影。
+
+行政区划数据集中在：
+
+```text
+lab/capital-metro-atlas/data/administrative/
+```
+
+海拔数据集中在：
+
+```text
+lab/capital-metro-atlas/data/environment/
+```
+
+重新生成数据：
+
+```powershell
+python lab/capital-metro-atlas/scripts/fetch_administrative.py
+python lab/capital-metro-atlas/scripts/build_elevation_overlay.py
+```
+
+来源、处理方法和使用限制分别记录在 `lab/capital-metro-atlas/sources/`。后续交通、产业、人口、住房等要素应继续按主题进入 `data/`，不要按亦庄、通州等区域重复建立数据体系。
