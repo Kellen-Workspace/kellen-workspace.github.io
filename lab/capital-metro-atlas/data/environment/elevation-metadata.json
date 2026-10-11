@@ -1,0 +1,35 @@
+{
+  "bounds": [
+    113.35,
+    36.0,
+    119.95,
+    42.75
+  ],
+  "coordinates": [
+    [
+      113.35,
+      42.75
+    ],
+    [
+      119.95,
+      42.75
+    ],
+    [
+      119.95,
+      36.0
+    ],
+    [
+      113.35,
+      36.0
+    ]
+  ],
+  "zoom": 8,
+  "classification": [
+    "<100 m",
+    "100–300 m",
+    "300–800 m",
+    "≥800 m"
+  ],
+  "source": "Mapzen Terrain Tiles on AWS Open Data",
+  "method": "Terrarium DEM decoding; four-band classification; clipped to Beijing, Tianjin and Hebei province polygons."
+}
