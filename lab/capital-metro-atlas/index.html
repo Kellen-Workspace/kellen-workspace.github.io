@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#17231f">
+  <meta name="description" content="京津冀行政区划、行政中心与海拔地形的二维交互研究地图。">
+  <title>首都都市圈空间研究 · Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6.13.0/dist/maplibre-gl.css">
+  <link rel="stylesheet" href="./styles.css?v=20261011-1">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../">LAB / 空间研究</a>
+    <div class="top-title"><strong>首都都市圈空间研究</strong><span>CAPITAL METROPOLITAN ATLAS</span></div>
+    <nav aria-label="功能导航"><a href="../../blog/">博客</a><a class="active" href="../">实验室</a><a href="../../tool/">工具</a><a href="../../invest/">投资</a></nav>
+  </header>
+
+  <main class="app-shell">
+    <aside id="control-panel" class="control-panel">
+      <button id="panel-close" class="panel-close" type="button" aria-label="关闭图层面板">×</button>
+      <section class="intro">
+        <p class="eyebrow">JING–JIN–JI · BASE MAP 01</p>
+        <h1>首都都市圈<br>基础空间骨架</h1>
+        <p>以北京、天津与河北为研究范围，先建立行政区划、行政中心与地形约束，后续逐层叠加交通、产业、人口和住房数据。</p>
+      </section>
+
+      <section class="summary-grid" aria-label="数据摘要">
+        <div><strong id="province-count">—</strong><span>省级单元</span></div>
+        <div><strong id="city-count">—</strong><span>地市级单元</span></div>
+        <div><strong id="district-count">—</strong><span>区县级单元</span></div>
+        <div><strong id="seat-count">—</strong><span>行政中心点</span></div>
+      </section>
+
+      <section class="search-section">
+        <label for="region-search">定位行政区</label>
+        <div class="search-row">
+          <input id="region-search" list="region-options" placeholder="输入北京、张家口、滨海新区…" autocomplete="off">
+          <datalist id="region-options"></datalist>
+          <button id="search-button" type="button">定位</button>
+        </div>
+      </section>
+
+      <section class="layer-group">
+        <div class="section-title"><div><p class="eyebrow">TERRAIN</p><h2>地形与开发约束</h2></div><button class="group-toggle" data-group="terrain" type="button">全部</button></div>
+        <label class="layer-control"><input type="checkbox" data-layer="elevation-bands" checked><span class="swatch elevation"></span><span><b>海拔分层</b><small>四级相对高程分区</small></span></label>
+        <label class="layer-control"><input type="checkbox" data-layer="hillshade" checked><span class="swatch hillshade"></span><span><b>地形阴影</b><small>强调山脊、谷地与坡面</small></span></label>
+        <label class="opacity-control"><span>海拔层透明度</span><input id="elevation-opacity" type="range" min="0" max="100" value="82"><output id="opacity-output">82%</output></label>
+        <div class="elevation-legend" aria-label="海拔图例">
+          <span><i class="e0"></i>&lt;100 m</span><span><i class="e1"></i>100–300 m</span>
+          <span><i class="e2"></i>300–800 m</span><span><i class="e3"></i>≥800 m</span>
+        </div>
+        <p class="caution">海拔只表示宏观地形约束，不等同于建设适宜性；坡度、地质灾害、生态红线、水资源与规划条件仍需另行叠加。</p>
+      </section>
+
+      <section class="layer-group">
+        <div class="section-title"><div><p class="eyebrow">ADMINISTRATION</p><h2>行政空间框架</h2></div><button class="group-toggle" data-group="admin" type="button">全部</button></div>
+        <label class="layer-control"><input type="checkbox" data-layer="province" checked><span class="line-key province"></span><span><b>省级边界</b><small>北京、天津、河北</small></span></label>
+        <label class="layer-control"><input type="checkbox" data-layer="city" checked><span class="line-key city"></span><span><b>地市级边界</b><small>直辖市与河北地级市</small></span></label>
+        <label class="layer-control"><input type="checkbox" data-layer="district" checked><span class="line-key district"></span><span><b>区县边界</b><small>放大后显示更清晰</small></span></label>
+        <label class="layer-control"><input type="checkbox" data-layer="government-seats" checked><span class="point-key"></span><span><b>行政中心</b><small>省、市、区县三级参考点</small></span></label>
+      </section>
+
+      <section id="feature-card" class="feature-card" aria-live="polite">
+        <p class="eyebrow">MAP QUERY</p>
+        <h2>点击地图查看详情</h2>
+        <p>可查询行政区名称、行政代码、层级、上级代码及行政中心参考信息。</p>
+      </section>
+
+      <details class="method-note">
+        <summary>数据来源与口径</summary>
+        <p>行政边界与中心点取自阿里云 DataV 地理数据服务；海拔分层由 AWS Open Data 的 Mapzen Terrarium DEM 瓦片计算生成。所有边界仅供空间研究与可视化，不作为法定界线依据。</p>
+        <a href="./sources/administrative.md">行政数据说明</a><a href="./sources/environment.md">地形数据说明</a>
+      </details>
+    </aside>
+
+    <section class="map-panel" aria-label="首都都市圈交互地图">
+      <div id="map"></div>
+      <button id="panel-open" class="panel-open" type="button">图层与检索</button>
+      <div id="map-status" class="map-status"><span class="pulse"></span>正在加载空间数据</div>
+      <div class="map-caption"><span>二维研究底图 · 2026-10-11</span><span id="pointer-coordinates">移动鼠标查看坐标</span></div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/maplibre-gl@6.13.0/dist/maplibre-gl.js"></script>
+  <script src="./app.js?v=20261011-1"></script>
+</body>
+</html>
