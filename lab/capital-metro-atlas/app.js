@@ -3,12 +3,16 @@ const DATA_PATHS = {
   city: './data/administrative/city.geojson',
   district: './data/administrative/district.geojson',
   seats: './data/administrative/government-seats.geojson',
+  functional: './data/planning/capital-functional-circle.geojson',
+  xiongan: './data/planning/xiongan-new-area.geojson',
   elevation: './data/environment/elevation-metadata.json'
 };
 
 const LEVEL_LABEL = { province: '省级', city: '地市级', district: '区县级' };
 const LAYER_GROUPS = {
   'elevation-bands': ['elevation-bands'],
+  'capital-circle': ['functional-fill', 'functional-line'],
+  xiongan: ['xiongan-fill', 'xiongan-line', 'xiongan-label'],
   hillshade: ['hillshade'],
   province: ['province-fill', 'province-line'],
   city: ['city-fill', 'city-line', 'city-labels'],
@@ -27,7 +31,8 @@ const els = {
   panel: document.querySelector('#control-panel'),
   panelOpen: document.querySelector('#panel-open'),
   panelClose: document.querySelector('#panel-close'),
-  coordinates: document.querySelector('#pointer-coordinates')
+  coordinates: document.querySelector('#pointer-coordinates'),
+  viewNote: document.querySelector('#view-note')
 };
 
 const map = new maplibregl.Map({
@@ -98,11 +103,27 @@ function addLayers(data) {
     }
   });
 
+  map.addSource('functional', sourceConfig(data.functional));
+  map.addSource('xiongan', sourceConfig(data.xiongan));
+  map.addSource('xiongan-center', {
+    type: 'geojson',
+    data: { type: 'FeatureCollection', features: [{
+      type: 'Feature',
+      properties: { name: '雄安新区' },
+      geometry: { type: 'Point', coordinates: [115.97, 38.95] }
+    }] }
+  });
   map.addSource('province', sourceConfig(data.province));
   map.addSource('city', sourceConfig(data.city));
   map.addSource('district', sourceConfig(data.district));
   map.addSource('seats', sourceConfig(data.seats));
 
+  map.addLayer({ id: 'functional-fill', type: 'fill', source: 'functional', paint: {
+    'fill-color': '#377fa0', 'fill-opacity': 0.13
+  }});
+  map.addLayer({ id: 'xiongan-fill', type: 'fill', source: 'xiongan', paint: {
+    'fill-color': '#d15343', 'fill-opacity': 0.28
+  }});
   map.addLayer({ id: 'province-fill', type: 'fill', source: 'province', paint: {
     'fill-color': '#f7f6ed',
     'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.22, 0.03]
@@ -127,6 +148,14 @@ function addLayers(data) {
     'line-color': '#112f29', 'line-width': ['interpolate', ['linear'], ['zoom'], 5, 2.1, 9, 4],
     'line-opacity': 0.96
   }});
+  map.addLayer({ id: 'functional-line', type: 'line', source: 'functional', paint: {
+    'line-color': '#235f84', 'line-width': ['interpolate', ['linear'], ['zoom'], 5, 1.8, 9, 3.2],
+    'line-opacity': 0.92
+  }});
+  map.addLayer({ id: 'xiongan-line', type: 'line', source: 'xiongan', paint: {
+    'line-color': '#a9322a', 'line-width': ['interpolate', ['linear'], ['zoom'], 5, 2.6, 9, 5],
+    'line-opacity': 1
+  }});
 
   map.addLayer({ id: 'government-points', type: 'circle', source: 'seats', paint: {
     'circle-radius': ['match', ['get', 'admin_level'], 'province', 6, 'city', 4.7, 3],
@@ -150,6 +179,13 @@ function addLayers(data) {
       'text-offset': [0, 1.05], 'text-anchor': 'top', 'text-allow-overlap': false
     },
     paint: { 'text-color': '#384740', 'text-halo-color': 'rgba(250,249,240,.9)', 'text-halo-width': 1 }
+  });
+  map.addLayer({ id: 'xiongan-label', type: 'symbol', source: 'xiongan-center',
+    layout: {
+      'text-field': '雄安新区', 'text-font': ['Noto Sans Regular'], 'text-size': 16,
+      'text-offset': [0, -0.2], 'text-anchor': 'bottom', 'text-allow-overlap': true
+    },
+    paint: { 'text-color': '#8f2822', 'text-halo-color': 'rgba(255,250,240,.96)', 'text-halo-width': 2 }
   });
 }
 
@@ -211,7 +247,7 @@ function bindControls() {
     button.addEventListener('click', () => {
       const keys = button.dataset.group === 'terrain'
         ? ['elevation-bands', 'hillshade']
-        : ['province', 'city', 'district', 'government-seats'];
+        : ['capital-circle', 'xiongan', 'province', 'city', 'district', 'government-seats'];
       const controls = keys.map(key => document.querySelector(`[data-layer="${key}"]`));
       const turnOn = controls.some(control => !control.checked);
       controls.forEach(control => {
@@ -230,6 +266,39 @@ function bindControls() {
   els.search.addEventListener('keydown', event => { if (event.key === 'Enter') locateRegion(); });
   els.panelOpen.addEventListener('click', () => els.panel.classList.add('open'));
   els.panelClose.addEventListener('click', () => els.panel.classList.remove('open'));
+  document.querySelectorAll('[data-view]').forEach(button => {
+    button.addEventListener('click', () => focusView(button.dataset.view));
+  });
+}
+
+function geometryBounds(collection) {
+  let west = Infinity, south = Infinity, east = -Infinity, north = -Infinity;
+  const visit = value => {
+    if (!Array.isArray(value)) return;
+    if (typeof value[0] === 'number' && typeof value[1] === 'number') {
+      west = Math.min(west, value[0]); east = Math.max(east, value[0]);
+      south = Math.min(south, value[1]); north = Math.max(north, value[1]);
+      return;
+    }
+    value.forEach(visit);
+  };
+  collection.features.forEach(feature => visit(feature.geometry.coordinates));
+  return [[west, south], [east, north]];
+}
+
+function focusView(view, duration = 850) {
+  const notes = {
+    all: '京津冀全域作为产业协同背景，包含石家庄等外围节点城市。',
+    functional: '首都都市圈功能圈：北京、天津、雄安新区及廊坊、保定、张家口指定区县。',
+    xiongan: '雄安新区规划范围：雄县、容城、安新三县及鄚州、苟各庄、七间房、龙化四个乡镇。'
+  };
+  const bounds = view === 'all'
+    ? [[113.35, 36], [119.95, 42.75]]
+    : geometryBounds(view === 'functional' ? datasets.functional : datasets.xiongan);
+  map.fitBounds(bounds, { padding: view === 'xiongan' ? 72 : 44, duration });
+  document.querySelectorAll('[data-view]').forEach(button => button.classList.toggle('active', button.dataset.view === view));
+  els.viewNote.textContent = notes[view];
+  if (window.innerWidth <= 960) els.panel.classList.remove('open');
 }
 
 function bindMapInteractions() {
@@ -267,11 +336,12 @@ function bindMapInteractions() {
 
 map.on('load', async () => {
   try {
-    const [province, city, district, seats, elevation] = await Promise.all([
+    const [province, city, district, seats, functional, xiongan, elevation] = await Promise.all([
       loadJson(DATA_PATHS.province), loadJson(DATA_PATHS.city), loadJson(DATA_PATHS.district),
-      loadJson(DATA_PATHS.seats), loadJson(DATA_PATHS.elevation)
+      loadJson(DATA_PATHS.seats), loadJson(DATA_PATHS.functional), loadJson(DATA_PATHS.xiongan),
+      loadJson(DATA_PATHS.elevation)
     ]);
-    datasets = { province, city, district, seats, elevation };
+    datasets = { province, city, district, seats, functional, xiongan, elevation };
     addLayers(datasets);
     buildSearch(datasets);
     document.querySelector('#province-count').textContent = province.features.length;
@@ -280,7 +350,7 @@ map.on('load', async () => {
     document.querySelector('#seat-count').textContent = seats.features.length;
     bindControls();
     bindMapInteractions();
-    map.fitBounds([[113.35, 36], [119.95, 42.75]], { padding: 34, duration: 0 });
+    focusView('xiongan', 0);
     setStatus('空间数据已加载', true);
   } catch (error) {
     console.error(error);
