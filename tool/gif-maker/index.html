@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#183f37">
+  <meta name="description" content="在浏览器本地将多张图片排序、设置帧时长并合成为 GIF。">
+  <title>图片合成 GIF · Kellen Tools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20261025-1">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../">← TOOL</a>
+    <nav aria-label="功能导航"><a href="../../blog/">Blog</a><a href="../../lab/">Lab</a><a class="active" href="../">Tool</a><a href="../../invest/">Invest</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div><p class="eyebrow">LOCAL GIF MAKER</p><h1>图片合成<br>GIF 动图</h1></div>
+      <div class="hero-copy"><p>按顺序加入多张图片，设置尺寸、播放速度与画面适应方式，然后在浏览器中直接生成 GIF。</p><p class="privacy">图片不会上传到服务器，关闭页面后自动清除。</p></div>
+    </section>
+
+    <section class="workspace">
+      <div class="editor-column">
+        <section class="panel upload-panel">
+          <div class="panel-heading"><div><p class="step">01 · IMAGES</p><h2>添加与排列帧</h2></div><span id="frame-count" class="counter">0 帧</span></div>
+          <label id="drop-zone" class="drop-zone" tabindex="0">
+            <input id="file-input" type="file" accept="image/*" multiple hidden>
+            <span class="upload-mark">＋</span><strong>选择图片或拖到这里</strong><small>也可以直接按 Ctrl + V 粘贴图片</small>
+          </label>
+          <div class="batch-row">
+            <label>统一帧时长 <span class="inline-input"><input id="batch-delay" type="number" min="20" max="60000" step="10" value="500"> ms</span></label>
+            <button id="apply-delay" class="text-button" type="button">应用到全部</button>
+            <button id="clear-all" class="text-button danger" type="button" disabled>清空</button>
+          </div>
+          <ol id="frame-list" class="frame-list" aria-label="GIF 帧列表"></ol>
+          <div id="empty-frames" class="empty-frames">尚未添加图片。第一张图片将决定默认画布比例。</div>
+        </section>
+
+        <section class="panel settings-panel">
+          <div class="panel-heading"><div><p class="step">02 · SETTINGS</p><h2>输出设置</h2></div></div>
+          <div class="settings-grid">
+            <label><span>宽度</span><div class="field-with-unit"><input id="width" type="number" min="1" max="2400" value="800"><b>px</b></div></label>
+            <label><span>高度</span><div class="field-with-unit"><input id="height" type="number" min="1" max="2400" value="600"><b>px</b></div></label>
+            <label><span>画面适应</span><select id="fit"><option value="contain">完整显示</option><option value="cover">填满裁切</option><option value="stretch">拉伸填满</option></select></label>
+            <label><span>背景颜色</span><div class="color-field"><input id="background" type="color" value="#ffffff"><code id="color-value">#ffffff</code></div></label>
+            <label><span>颜色处理</span><select id="dither"><option value="on">平滑抖动（推荐）</option><option value="off">快速转换</option></select></label>
+            <label class="check-field"><input id="loop" type="checkbox" checked><span><strong>无限循环</strong><small>关闭后播放一次</small></span></label>
+          </div>
+          <p class="limit-note">为保证浏览器稳定，单边最大 2400 px；总处理量超过 4000 万像素时会提示缩小尺寸或减少图片。</p>
+        </section>
+      </div>
+
+      <aside class="preview-column">
+        <section class="preview-card">
+          <div class="preview-heading"><div><p class="step">03 · PREVIEW</p><h2>预览与导出</h2></div><span id="preview-status">等待图片</span></div>
+          <div id="preview-stage" class="preview-stage"><canvas id="preview-canvas" width="800" height="600"></canvas><img id="gif-preview" alt="生成的 GIF 预览" hidden><div id="preview-placeholder"><span>GIF</span><p>加入至少两张图片后<br>即可生成动图</p></div></div>
+          <div class="preview-meta"><span id="preview-size">800 × 600 px</span><span id="estimate">预计大小将在生成后显示</span></div>
+          <div id="progress-wrap" class="progress-wrap" hidden><div class="progress-track"><span id="progress-bar"></span></div><p id="progress-text">正在准备…</p></div>
+          <button id="generate" class="primary-button" type="button" disabled>生成 GIF</button>
+          <a id="download" class="download-button" href="#" download="animation.gif" hidden>下载 GIF</a>
+          <p class="local-note">生成过程可能需要几秒钟，请在完成前保持页面打开。</p>
+        </section>
+      </aside>
+    </section>
+
+    <section class="tips"><div><p class="step">WORKFLOW</p><h2>三个小建议</h2></div><div class="tip-grid"><p><b>统一尺寸</b><span>不同尺寸的图片会根据“完整显示、填满裁切或拉伸”自动适配同一画布。</span></p><p><b>控制体积</b><span>缩小宽高、减少帧数或缩短动画内容，通常比降低颜色质量更有效。</span></p><p><b>调整顺序</b><span>可拖动帧卡片，也可用上下箭头精确改变播放顺序。</span></p></div></section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <footer>© <span id="year"></span> Kellen · Images stay on this device</footer>
+  <script src="gif-encoder.js?v=20261025-1"></script>
+  <script src="app.js?v=20261025-1"></script>
+</body>
+</html>
+
