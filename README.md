@@ -11,6 +11,7 @@
 - `/lab/capital-metro-atlas/`：首都都市圈二维空间研究地图，以京津冀为背景，重点展示首都都市圈功能圈、雄安新区、行政中心和海拔地形。
 - `/tool/`：实用工具集合。
 - `/tool/formula-image-to-word/`：图片公式识别与 Word 导出工具，无需 ChatGPT 登录。
+- `/tool/gif-maker/`：多图片排序、逐帧时长设置与浏览器本地 GIF 合成工具。
 - `/invest/`：中文投资研究入口，分为政策、银行、大宗商品、房地产、行业、周期、A股七个模块。
 - `/invest/industries/`：申万三级行业财务增速与价格表现看板。
 - `/tools/satellite-map/`：现有全球卫星影像工具。
@@ -251,6 +252,12 @@ tool/symbol-clipboard/symbols.js
 ```
 
 页面支持按分组筛选和按符号、中文名、英文名、用途或 Markdown 命令搜索。Markdown 数学语法需要目标编辑器支持 LaTeX、KaTeX 或 MathJax。
+
+## 图片合成 GIF
+
+工具入口位于 `tool/gif-maker/`。支持选择、拖放或从剪贴板粘贴多张图片，拖动调整帧顺序，设置统一或逐帧时长、输出宽高、画面适应方式、背景色与循环方式。
+
+图片解码、缩放和 GIF 编码全部在浏览器中完成，不上传文件，也不需要 API Key。编码器位于 `tool/gif-maker/gif-encoder.js`，使用固定 256 色 RGB332 调色板，并可选 Floyd–Steinberg 抖动。为避免浏览器内存耗尽，页面限制单边最大 2400 px、总处理量不超过 4000 万像素。
 
 
 
