@@ -471,7 +471,7 @@ function gridLineStyle(value, axis) {
   const isMajor = Math.abs(value) % 30 === 0;
   return {
     pane: 'gridPane',
-    color: isOrigin ? '#ffd166' : '#77d5ff',
+    color: '#ffd166',
     weight: isOrigin ? 1.8 : isMajor ? 1.15 : 0.65,
     opacity: isOrigin ? 0.95 : isMajor ? 0.78 : 0.48,
     dashArray: isOrigin ? null : isMajor ? null : '3 4',
