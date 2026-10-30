@@ -14,7 +14,7 @@
 - `/tool/gif-maker/`：多图片排序、逐帧时长设置与浏览器本地 GIF 合成工具。
 - `/invest/`：中文投资研究入口，分为政策、银行、大宗商品、房地产、行业、周期、A股七个模块。
 - `/invest/industries/`：申万三级行业财务增速与价格表现看板。
-- `/tools/satellite-map/`：现有全球卫星影像工具。
+- `/lab/satellite-map/`：全球卫星影像实验，支持多底图、经纬度定位、实测站点、SHP 图层和全球 5° 经纬度格网。
 
 图片公式识别工具要求使用者每次打开页面时输入自己的 DeepSeek API Key。Key 只保存在当前页面内存中，不写入浏览器存储；关闭或刷新页面后会被清空。API 地址固定为 DeepSeek 官方接口。
 
@@ -285,4 +285,3 @@ python lab/capital-metro-atlas/scripts/build_elevation_overlay.py
 ```
 
 来源、处理方法和使用限制分别记录在 `lab/capital-metro-atlas/sources/`。后续交通、产业、人口、住房等要素应继续按主题进入 `data/`，不要按亦庄、通州等区域重复建立数据体系。
-

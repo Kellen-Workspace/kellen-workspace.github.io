@@ -511,4 +511,3 @@ loadGridBtn.addEventListener('click', () => {
   gridStatus.style.display = 'block';
   gridStatus.textContent = '每隔 5°：73 条经线 · 35 条纬线';
 });
-

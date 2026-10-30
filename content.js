@@ -33,13 +33,13 @@ window.SITE_COLLECTIONS = {
     label: "LAB", title: "Lab", description: "Experiments, prototypes, algorithm demonstrations, and small ideas in progress.", emptyText: "第一个实验项目将在这里出现。",
     items: [
       { title: "蛇亚目系统发育图谱", description: "用可展开的系统发育树学习蛇类主要演化分支，并为感兴趣的节点建立照片档案。", meta: "Biology · Interactive", url: "serpent-phylogeny/" },
-      { title: "首都都市圈空间研究", description: "以京津冀行政区划、行政中心与海拔地形为骨架，持续叠加交通、产业、人口与住房等空间要素。", meta: "Geospatial · Interactive", url: "capital-metro-atlas/" }
+      { title: "首都都市圈空间研究", description: "以京津冀行政区划、行政中心与海拔地形为骨架，持续叠加交通、产业、人口与住房等空间要素。", meta: "Geospatial · Interactive", url: "capital-metro-atlas/" },
+      { title: "全球卫星影像", description: "浏览多种全球底图、定位经纬度、加载实测站点与 SHP 图层，并可叠加 5°×5° 全球经纬度格网。", meta: "Geospatial · Interactive", url: "satellite-map/" }
     ]
   },
   tool: {
     label: "TOOL", title: "Tools", description: "Research utilities and practical web tools developed for daily work.", emptyText: "新的研究工具将在这里出现。",
     items: [
-      { title: "全球卫星影像", description: "浏览卫星底图、定位经纬度，并加载实测站点与 SHP 图层。", meta: "Geospatial · Live", url: "../tools/satellite-map/" },
       { title: "图片公式识别", description: "识别公式图片，并导出或复制可编辑公式到 Word。每次使用时输入自己的 API Key，页面不会保存密钥。", meta: "OCR · Live", url: "formula-image-to-word/?v=20260919-3" },
       { title: "图片合成 GIF", description: "批量导入、粘贴和排序图片，设置逐帧时长、尺寸与适应方式，在浏览器本地生成并下载 GIF。", meta: "Images · Local", url: "gif-maker/" },
       { title: "学术符号速查与复制", description: "点击复制希腊字母、变化符号、数学运算符与箭头，并同步查看可用于 Markdown 数学公式的写法。", meta: "Symbols · Clipboard", url: "symbol-clipboard/" }
@@ -47,4 +47,3 @@ window.SITE_COLLECTIONS = {
   },
   invest: { label: "INVEST", title: "Invest", description: "Economic data, market observations, and reproducible quantitative analysis.", emptyText: "第一项经济数据分析将在这里出现。", items: [] }
 };
-
